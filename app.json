@@ -1,0 +1,10 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "circle21.lens",
+    "slug": "circle21.lens"
+  }
+}
