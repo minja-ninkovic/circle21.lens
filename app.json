@@ -1,10 +1,96 @@
 {
   "expo": {
-    "scheme": "acme",
-    "web": {
-      "bundler": "metro"
-    },
+    "owner": "minja-ninkovic",
     "name": "circle21.lens",
-    "slug": "circle21-lens"
+    "slug": "circle21-lens",
+    "scheme": "circle21lens",
+    "version": "0.0.1",
+    "ios": {
+      "buildNumber": "1",
+      "bundleIdentifier": "app.circle21.circle21lens",
+      "infoPlist": {
+        "CFBundleURLSchemes": ["fb775398886684410"],
+        "NSCameraUsageDescription": "Allow use of camera for scanning QR code and recording workouts for Judge review.",
+        "NSMicrophoneUsageDescription": "Allow use of microphone for camera recordings.",
+        "NSPhotoLibraryUsageDescription": "Allow access to photos to upload an avatar or competition covers from your library.",
+        "NSPhotoLibraryAddUsageDescription": "Allow access to photos to upload an avatar or competition covers from your library."
+      },
+      "usesAppleSignIn": true,
+      "entitlements": {
+        "com.apple.developer.networking.wifi-info": true
+      }
+    },
+    "android": {
+      "versionCode": 1,
+      "package": "app.circle21.circle21lens",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "host": "*",
+              "path": "/expo_oauthredirect",
+              "scheme": "circle21lens"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
+      "googleServicesFile": "./google-services.json",
+      "permissions": [
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.ACCESS_MEDIA_LOCATION"
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon-prod.png",
+        "backgroundColor": "#202020"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "orientation": "default",
+    "backgroundColor": "#202020",
+    "icon": "./assets/icon-prod.png",
+    "splash": {
+      "image": "./assets/splash-prod.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#202020"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_ERROR_RECOVERY"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "extra": {
+      "eas": {
+        "projectId": "19a4a234-754f-416e-8a45-a66aff9c0599"
+      }
+    },
+    "plugins": [
+      "react-native-vision-camera",
+      "expo-build-properties",
+      "expo-localization",
+      [
+        "expo-media-library",
+        {
+          "isAccessMediaLocationEnabled": true
+        }
+      ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "ALL"
+        }
+      ],
+      [
+        "@config-plugins/ffmpeg-kit-react-native",
+        {
+          "package": "video"
+        }
+      ]
+    ]
   }
 }

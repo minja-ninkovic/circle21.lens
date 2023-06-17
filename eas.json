@@ -1,0 +1,43 @@
+{
+  "cli": {
+    "version": ">= 0.34.1"
+  },
+  "build": {
+    "dev": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "releaseChannel": "dev",
+      "credentialsSource": "local",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "PROFILE": "dev"
+      }
+    },
+    "sim": {
+      "extends": "dev",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "test": {
+      "distribution": "internal",
+      "releaseChannel": "test",
+      "credentialsSource": "local",
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "PROFILE": "test"
+      }
+    },
+    "production": {
+      "releaseChannel": "prod",
+      "credentialsSource": "local",
+      "env": {
+        "PROFILE": "prod"
+      }
+    }
+  }
+}
