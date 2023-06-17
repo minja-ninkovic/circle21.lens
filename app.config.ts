@@ -25,7 +25,7 @@ const getProfile = (config: Partial<ExpoConfig>) => {
   } else if (profile === 'test') {
     return {
       name: `circle21.lens.test`,
-      icon: './assets/icon.-test.png',
+      icon: './assets/icon-test.png',
       splash: {
         image: './assets/splash-test.png',
         resizeMode: config.splash.resizeMode,

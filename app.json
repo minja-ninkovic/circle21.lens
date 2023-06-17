@@ -43,7 +43,7 @@
         "android.permission.ACCESS_MEDIA_LOCATION"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon-prod.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#202020"
       }
     },
@@ -53,9 +53,9 @@
     },
     "orientation": "default",
     "backgroundColor": "#202020",
-    "icon": "./assets/icon-prod.png",
+    "icon": "./assets/icon.png",
     "splash": {
-      "image": "./assets/splash-prod.png",
+      "image": "./assets/splash.png",
       "resizeMode": "cover",
       "backgroundColor": "#202020"
     },
