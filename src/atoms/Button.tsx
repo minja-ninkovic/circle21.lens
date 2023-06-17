@@ -3,9 +3,9 @@ import { ActivityIndicator, Dimensions, PressableProps, ViewStyle } from 'react-
 import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { PlatformPressable } from '@react-navigation/elements';
-import { colors, grid, typography } from '../../styles';
+import { colors, grid, typography } from '../styles';
 import { Gap } from './Gap';
-import { getTextColor } from '../../helpers/getTextColor';
+import { getTextColor } from '../helpers/getTextColor';
 import hash from 'stable-hash';
 
 export interface ButtonProps extends PressableProps {
