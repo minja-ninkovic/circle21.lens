@@ -4,7 +4,7 @@
     "name": "circle21.lens",
     "slug": "circle21-lens",
     "scheme": "circle21lens",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "ios": {
       "buildNumber": "1",
       "bundleIdentifier": "app.circle21.circle21lens",
@@ -71,7 +71,14 @@
     },
     "plugins": [
       "react-native-vision-camera",
-      "expo-build-properties",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.7.0"
+          }
+        }
+      ],
       "expo-localization",
       [
         "expo-media-library",
@@ -88,7 +95,7 @@
       [
         "@config-plugins/ffmpeg-kit-react-native",
         {
-          "package": "video"
+          "package": "full-gpl"
         }
       ]
     ]
