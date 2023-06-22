@@ -4,7 +4,7 @@
     "name": "circle21.lens",
     "slug": "circle21-lens",
     "scheme": "circle21lens",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "ios": {
       "buildNumber": "1",
       "bundleIdentifier": "app.circle21.circle21lens",
