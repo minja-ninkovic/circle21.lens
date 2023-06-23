@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 import hash from "stable-hash";
 import {
   Camera as DefaultCamera,
@@ -14,6 +14,7 @@ import {
   ReturnCode,
 } from "ffmpeg-kit-react-native";
 import * as FileSystem from "expo-file-system";
+import { Button } from "./Button";
 
 interface Props extends Omit<CameraProps, "device" | "isActive"> {
   isActive?: boolean;
@@ -25,60 +26,82 @@ function _Camera({ isActive = true, device, ...props }: Props) {
   const _device = device || devices.back;
 
   const [pipe, setPipe] = React.useState(null);
-  const once = React.useRef(false);
 
-  const frameProcessor = useFrameProcessor((frame) => {
-    "worklet";
-    if (pipe) FFmpegKitConfig.writeToPipe(frame.toString(), pipe);
-  }, []);
+  const frameProcessor = useFrameProcessor(
+    (frame) => {
+      "worklet";
+      if (pipe) {
+        FFmpegKitConfig.writeToPipe(frame.toString(), pipe);
+      }
+    },
+    [pipe]
+  );
+
+  function notNull(string, valuePrefix) {
+    return string === undefined || string == null
+      ? ""
+      : valuePrefix.concat(string);
+  }
 
   React.useEffect(() => {
     !pipe &&
-      setPipe(
-        FFmpegKitConfig.registerNewFFmpegPipe().then((_pipe) => {
-          FFmpegKit.executeAsync(
-            `-hide_banner -y -i ${_pipe} -filter_complex loop=loop=-1 -c:v libx264 -r 30 ${FileSystem.documentDirectory}output.mp4`,
-            async (session) => {
-              const state = FFmpegKitConfig.sessionStateToString(
-                await session.getState()
-              );
-              const returnCode = await session.getReturnCode();
-              const failStackTrace = await session.getFailStackTrace();
+      FFmpegKitConfig.registerNewFFmpegPipe().then((_pipe) => {
+        FFmpegKit.executeAsync(
+          `-y -i ${_pipe} -filter_complex format=yuv420p -loop 1 -r 30 ${FileSystem.documentDirectory}output.mp4`,
+          async (session) => {
+            const state = FFmpegKitConfig.sessionStateToString(
+              await session.getState()
+            );
+            const returnCode = await session.getReturnCode();
+            const failStackTrace = await session.getFailStackTrace();
 
-              // ffprint(`FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(failStackTrace, "\\n")}`);
+            console.log(
+              `FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(
+                failStackTrace,
+                "\\n"
+              )}`
+            );
 
-              // this.hideProgressDialog();
+            // this.hideProgressDialog();
 
-              // CLOSE PIPES
-              FFmpegKitConfig.closeFFmpegPipe(pipe);
+            // CLOSE PIPES
+            FFmpegKitConfig.closeFFmpegPipe(_pipe);
 
-              if (ReturnCode.isSuccess(returnCode)) {
-                // ffprint("Create completed successfully; playing video.");
-                // this.playVideo();
-                // listAllStatistics(session);
-              } else {
-                // ffprint("Create failed. Please check log for the details.");
-              }
+            if (ReturnCode.isSuccess(returnCode)) {
+              console.log("Create completed successfully; playing video.");
+              // this.playVideo();
+              // listAllStatistics(session);
+            } else {
+              // ffprint("Create failed. Please check log for the details.");
             }
-          );
-        })
-      );
+          }
+        );
+        setPipe(_pipe);
+      });
 
-      return () => {
-        FFmpegKit.cancel();
-      }
+    return () => {
+      FFmpegKit.cancel();
+    };
   }, [pipe]);
 
   if (_device == null) return null;
 
   return (
-    <DefaultCamera
-      style={StyleSheet.absoluteFill}
-      device={_device}
-      isActive={isActive}
-      {...props}
-      frameProcessor={frameProcessor}
-    />
+    <View style={StyleSheet.absoluteFill}>
+      <DefaultCamera
+        style={StyleSheet.absoluteFill}
+        device={_device}
+        isActive={isActive}
+        {...props}
+        frameProcessor={frameProcessor}
+      />
+      <Button
+        title="rec"
+        onPress={() => {
+          FFmpegKit.cancel();
+        }}
+      />
+    </View>
   );
 }
 

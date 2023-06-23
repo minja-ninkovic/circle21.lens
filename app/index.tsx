@@ -13,6 +13,7 @@ export default function Root() {
         useNativeControls={true}
         resizeMode={ResizeMode.CONTAIN}
         source={{ uri: `${FileSystem.documentDirectory}output.mp4` }}
+        style={{ width: 350, height: 250 }}
       />
     </View>
   );
