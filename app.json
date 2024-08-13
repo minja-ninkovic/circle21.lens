@@ -4,16 +4,16 @@
     "name": "circle21.lens",
     "slug": "circle21-lens",
     "scheme": "circle21lens",
-    "version": "0.0.3",
+    "version": "0.0.1",
     "ios": {
       "buildNumber": "1",
       "bundleIdentifier": "app.circle21.circle21lens",
       "infoPlist": {
         "CFBundleURLSchemes": ["fb775398886684410"],
-        "NSCameraUsageDescription": "Allow use of camera for scanning QR code and recording workouts for Judge review.",
+        "NSCameraUsageDescription": "Allow use of camera.",
         "NSMicrophoneUsageDescription": "Allow use of microphone for camera recordings.",
-        "NSPhotoLibraryUsageDescription": "Allow access to photos to upload an avatar or competition covers from your library.",
-        "NSPhotoLibraryAddUsageDescription": "Allow access to photos to upload an avatar or competition covers from your library."
+        "NSPhotoLibraryUsageDescription": "Allow access to photos from your library.",
+        "NSPhotoLibraryAddUsageDescription": "Allow access to photos from your library."
       },
       "usesAppleSignIn": true,
       "entitlements": {
@@ -71,6 +71,7 @@
     },
     "plugins": [
       "react-native-vision-camera",
+      "expo-router",
       [
         "expo-build-properties",
         {

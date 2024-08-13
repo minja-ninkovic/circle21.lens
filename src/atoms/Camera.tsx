@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import hash from "stable-hash";
 import {
   Camera as DefaultCamera,
@@ -7,14 +7,15 @@ import {
   useCameraDevices,
   CameraDevice,
   useFrameProcessor,
+  runAsync,
 } from "react-native-vision-camera";
-import {
-  FFmpegKit,
-  FFmpegKitConfig,
-  ReturnCode,
-} from "ffmpeg-kit-react-native";
-import * as FileSystem from "expo-file-system";
-import { Button } from "./Button";
+// import {
+//   FFmpegKit,
+//   FFmpegKitConfig,
+//   ReturnCode,
+// } from "ffmpeg-kit-react-native";
+// import * as FileSystem from "expo-file-system";
+// import { Button } from "./Button";
 
 interface Props extends Omit<CameraProps, "device" | "isActive"> {
   isActive?: boolean;
@@ -23,19 +24,18 @@ interface Props extends Omit<CameraProps, "device" | "isActive"> {
 
 function _Camera({ isActive = true, device, ...props }: Props) {
   const devices = useCameraDevices();
-  const _device = device || devices.back;
+  const _device = device || devices[0];
 
   const [pipe, setPipe] = React.useState(null);
 
-  const frameProcessor = useFrameProcessor(
-    (frame) => {
-      "worklet";
-      if (pipe) {
-        FFmpegKitConfig.writeToPipe(frame.toString(), pipe);
-      }
-    },
-    [pipe]
-  );
+  const frameProcessor = useFrameProcessor((frame) => {
+    "worklet";
+    console.log("I'm running synchronously at 60 FPS!");
+    
+    // if (pipe) {
+    //   FFmpegKitConfig.writeToPipe(frame.toString(), pipe);
+    // }
+  }, []);
 
   function notNull(string, valuePrefix) {
     return string === undefined || string == null
@@ -43,48 +43,50 @@ function _Camera({ isActive = true, device, ...props }: Props) {
       : valuePrefix.concat(string);
   }
 
-  React.useEffect(() => {
-    !pipe &&
-      FFmpegKitConfig.registerNewFFmpegPipe().then((_pipe) => {
-        FFmpegKit.executeAsync(
-          `-y -i ${_pipe} -filter_complex format=yuv420p -loop 1 -r 30 ${FileSystem.documentDirectory}output.mp4`,
-          async (session) => {
-            const state = FFmpegKitConfig.sessionStateToString(
-              await session.getState()
-            );
-            const returnCode = await session.getReturnCode();
-            const failStackTrace = await session.getFailStackTrace();
+  // React.useEffect(() => {
+  //   console.log(pipe);
 
-            console.log(
-              `FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(
-                failStackTrace,
-                "\\n"
-              )}`
-            );
+  //   !pipe &&
+  //     FFmpegKitConfig.registerNewFFmpegPipe().then((_pipe) => {
+  //       FFmpegKit.executeAsync(
+  //         `-y -i ${_pipe} -filter_complex format=yuv420p -loop 1 -r 30 ${FileSystem.documentDirectory}output.mp4`,
+  //         async (session) => {
+  //           const state = FFmpegKitConfig.sessionStateToString(
+  //             await session.getState()
+  //           );
+  //           const returnCode = await session.getReturnCode();
+  //           const failStackTrace = await session.getFailStackTrace();
 
-            // this.hideProgressDialog();
+  //           console.log(
+  //             `FFmpeg process exited with state ${state} and rc ${returnCode}.${notNull(
+  //               failStackTrace,
+  //               "\\n"
+  //             )}`
+  //           );
 
-            // CLOSE PIPES
-            FFmpegKitConfig.closeFFmpegPipe(_pipe);
+  //           // this.hideProgressDialog();
 
-            if (ReturnCode.isSuccess(returnCode)) {
-              console.log("Create completed successfully; playing video.");
-              // this.playVideo();
-              // listAllStatistics(session);
-            } else {
-              // ffprint("Create failed. Please check log for the details.");
-            }
-          }
-        );
-        setPipe(_pipe);
-      });
+  //           // CLOSE PIPES
+  //           FFmpegKitConfig.closeFFmpegPipe(_pipe);
 
-    return () => {
-      FFmpegKit.cancel();
-    };
-  }, [pipe]);
+  //           if (ReturnCode.isSuccess(returnCode)) {
+  //             console.log("Create completed successfully; playing video.");
+  //             // this.playVideo();
+  //             // listAllStatistics(session);
+  //           } else {
+  //             // ffprint("Create failed. Please check log for the details.");
+  //           }
+  //         }
+  //       );
+  //       setPipe(_pipe);
+  //     });
 
-  if (_device == null) return null;
+  //   return () => {
+  //     FFmpegKit.cancel();
+  //   };
+  // }, [pipe]);
+
+  // if (_device == null) return null;
 
   return (
     <View style={StyleSheet.absoluteFill}>
@@ -92,15 +94,16 @@ function _Camera({ isActive = true, device, ...props }: Props) {
         style={StyleSheet.absoluteFill}
         device={_device}
         isActive={isActive}
+        pixelFormat={Platform.OS === "ios" ? "native" : "yuv"}
         {...props}
         frameProcessor={frameProcessor}
       />
-      <Button
+      {/* <Button
         title="rec"
         onPress={() => {
           FFmpegKit.cancel();
         }}
-      />
+      /> */}
     </View>
   );
 }

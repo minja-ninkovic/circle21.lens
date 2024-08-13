@@ -4,7 +4,7 @@ const getProfile = (config: Partial<ExpoConfig>) => {
   const profile = process.env.PROFILE;
   if (profile === 'dev') {
     return {
-      name: `circle21.lens.dev`,
+      name: `dev.circle21.lens`,
       icon: './assets/icon-dev.png',
       splash: {
         image: './assets/splash-dev.png',
@@ -24,7 +24,7 @@ const getProfile = (config: Partial<ExpoConfig>) => {
     };
   } else if (profile === 'test') {
     return {
-      name: `circle21.lens.test`,
+      name: `test.circle21.lens`,
       icon: './assets/icon-test.png',
       splash: {
         image: './assets/splash-test.png',
