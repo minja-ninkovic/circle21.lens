@@ -92,12 +92,6 @@
         {
           "initialOrientation": "ALL"
         }
-      ],
-      [
-        "@config-plugins/ffmpeg-kit-react-native",
-        {
-          "package": "full-gpl"
-        }
       ]
     ]
   }
